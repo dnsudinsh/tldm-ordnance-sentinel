@@ -5,6 +5,7 @@ import {
   Gauge, 
   QrCode, 
   FileText,
+  Brain,
   Shield,
   Anchor
 } from "lucide-react";
@@ -41,6 +42,12 @@ const navigationItems = [
     url: "/add-inventory", 
     icon: Plus,
     description: "Register New Items"
+  },
+  { 
+    title: "AI Recommendations", 
+    url: "/ai-recommendations", 
+    icon: Brain,
+    description: "Mission Planning AI"
   },
   { 
     title: "Transfer Items", 

@@ -7,6 +7,7 @@ import { MainLayout } from "./components/layout/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import Inventory from "./pages/Inventory";
 import AddInventory from "./pages/AddInventory";
+import AIRecommendations from "./pages/AIRecommendations";
 import Transfer from "./pages/Transfer";
 import Barcode from "./pages/Barcode";
 import Reports from "./pages/Reports";
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/" element={<Dashboard />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/add-inventory" element={<AddInventory />} />
+            <Route path="/ai-recommendations" element={<AIRecommendations />} />
             <Route path="/transfer" element={<Transfer />} />
             <Route path="/barcode" element={<Barcode />} />
             <Route path="/reports" element={<Reports />} />
