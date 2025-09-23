@@ -27,6 +27,10 @@ export default {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
+        tactical: {
+          DEFAULT: "hsl(var(--tactical))",
+          foreground: "hsl(var(--tactical-foreground))",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -57,6 +61,26 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        info: "hsl(var(--info))",
+      },
+      fontFamily: {
+        display: ['Orbitron', 'monospace'],
+        body: ['Inter', 'sans-serif'],
+      },
+      backgroundImage: {
+        'gradient-naval': 'var(--gradient-naval)',
+        'gradient-tactical': 'var(--gradient-tactical)',
+        'gradient-gold': 'var(--gradient-gold)',
+        'gradient-glass': 'var(--gradient-glass)',
+        'gradient-readiness': 'var(--gradient-readiness)',
+      },
+      boxShadow: {
+        'tactical': 'var(--shadow-tactical)',
+        'glass': 'var(--shadow-glass)',
+        'glow': 'var(--shadow-glow)',
+        'elevation': 'var(--shadow-elevation)',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -80,10 +104,35 @@ export default {
             height: "0",
           },
         },
+        "fadeIn": {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "slideUp": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "glow": {
+          "0%": { boxShadow: "0 0 20px hsl(0 73% 41% / 0.2)" },
+          "100%": { boxShadow: "0 0 30px hsl(0 73% 41% / 0.6)" },
+        },
+        "scan": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        "pulse-tactical": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fadeIn 0.3s ease-out",
+        "slide-up": "slideUp 0.3s ease-out",
+        "glow": "glow 2s ease-in-out infinite alternate",
+        "scan": "scan 3s linear infinite",
+        "pulse-tactical": "pulse-tactical 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
