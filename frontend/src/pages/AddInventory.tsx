@@ -280,7 +280,7 @@ export default function AddInventory() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="ordnanceCategory">Ordnance Category *</Label>
-                <Select value={formData.ordnanceCategory} onValueChange={(value) => handleInputChange('ordnanceCategory', value)}>
+                <Select value={formData.ordnanceCategory} onValueChange={handleCategoryChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
@@ -304,12 +304,29 @@ export default function AddInventory() {
 
               <div className="space-y-2">
                 <Label htmlFor="typeSubType">Type/Sub-Type *</Label>
-                <Input
-                  id="typeSubType"
-                  value={formData.typeSubType}
-                  onChange={(e) => handleInputChange('typeSubType', e.target.value)}
-                  placeholder="e.g., Anti-Ship Missile"
-                />
+                <Select 
+                  value={formData.typeSubType} 
+                  onValueChange={(value) => handleInputChange('typeSubType', value)}
+                  disabled={!formData.ordnanceCategory}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={
+                      formData.ordnanceCategory 
+                        ? "Select type/sub-type" 
+                        : "First select a category"
+                    } />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getAvailableTypes().map(type => (
+                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {formData.ordnanceCategory && getAvailableTypes().length === 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    No pre-defined types available for this category. Contact administrator to add types.
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
