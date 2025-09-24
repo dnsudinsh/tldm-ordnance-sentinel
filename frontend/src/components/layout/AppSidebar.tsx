@@ -51,6 +51,12 @@ const navigationItems = [
     description: "Mission Planning AI"
   },
   { 
+    title: "Readiness Forecasting", 
+    url: "/forecasting", 
+    icon: TrendingUp,
+    description: "Predictive Analytics"
+  },
+  { 
     title: "Transfer Items", 
     url: "/transfer", 
     icon: ArrowRightLeft,
