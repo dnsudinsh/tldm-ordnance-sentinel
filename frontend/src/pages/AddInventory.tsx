@@ -112,6 +112,20 @@ export default function AddInventory() {
     }));
   };
 
+  const handleCategoryChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      ordnanceCategory: value,
+      typeSubType: "" // Reset type/sub-type when category changes
+    }));
+  };
+
+  // Get available types based on selected category
+  const getAvailableTypes = () => {
+    if (!formData.ordnanceCategory) return [];
+    return TYPE_SUBTYPE_MAPPING[formData.ordnanceCategory as keyof typeof TYPE_SUBTYPE_MAPPING] || [];
+  };
+
   const generateInventoryId = () => {
     const prefix = formData.ordnanceCategory.slice(0, 3).toUpperCase();
     const timestamp = Date.now().toString().slice(-6);
