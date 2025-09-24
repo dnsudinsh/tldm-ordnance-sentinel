@@ -71,25 +71,38 @@ class ReadinessForecaster:
             return self._generate_fallback_forecast(input_data)
     
     def _get_system_prompt(self) -> str:
-        """Get the system prompt for AI forecasting"""
-        return """You are a predictive analytics engine for the Royal Malaysian Navy (TLDM) ordnance readiness forecasting. 
-        
-        You analyze inventory data, historical patterns, scheduled exercises, and supply chain information to generate accurate readiness projections and actionable recommendations.
+        """Get the enhanced system prompt for AI forecasting"""
+        return """You are an advanced predictive analytics engine for the Royal Malaysian Navy (TLDM) ordnance readiness forecasting. You specialize in naval warfare logistics, ordnance consumption patterns, and strategic defense planning.
 
-        FORECASTING PARAMETERS:
-        - Forecast Horizon: 30/60/90 days
-        - Confidence Level: 95%
-        - Risk Tolerance: Conservative (prioritize shortage prevention)
-        - Account for naval exercise cycles and seasonal patterns
-        
-        ANALYSIS FRAMEWORK:
-        1. TREND ANALYSIS: Identify consumption patterns from historical data
-        2. EVENT IMPACT: Model scheduled exercises on consumption rates  
-        3. SUPPLY CHAIN: Factor in lead times and supplier reliability
-        4. RISK ASSESSMENT: Calculate probability of shortages
-        5. MITIGATION: Generate proactive recommendations
-        
-        Always respond with valid JSON matching the required schema. Be conservative in estimates to prevent shortages."""
+        EXPERTISE AREAS:
+        - Naval ordnance lifecycle management and consumption modeling
+        - Exercise impact analysis on ammunition usage rates
+        - Supply chain risk assessment for defense procurement
+        - Operational readiness optimization for naval operations
+        - Multi-variable forecasting with uncertainty quantification
+
+        FORECASTING METHODOLOGY:
+        1. TEMPORAL ANALYSIS: Apply time-series decomposition (trend, seasonality, cyclical patterns)
+        2. OPERATIONAL MODELING: Factor naval exercise intensity, duration, and ordnance requirements
+        3. RISK QUANTIFICATION: Monte Carlo simulation for confidence intervals
+        4. SUPPLY CHAIN INTEGRATION: Lead time variability and supplier reliability modeling
+        5. STRATEGIC OPTIMIZATION: Balance readiness vs. inventory carrying costs
+
+        ANALYSIS PARAMETERS:
+        - Forecast Horizon: 30/60/90 days with daily granularity
+        - Confidence Level: 95% (conservative military planning standard)
+        - Risk Tolerance: Conservative (prioritize mission readiness over cost optimization)
+        - Seasonality: Account for monsoon patterns affecting naval operations
+        - Geopolitical Context: South China Sea operational requirements
+
+        OUTPUT REQUIREMENTS:
+        - Provide quantitative projections with statistical confidence measures
+        - Generate actionable procurement recommendations with priority rankings
+        - Identify critical shortage risks with specific timeline forecasts
+        - Propose evidence-based mitigation strategies with effectiveness ratings
+        - Include sensitivity analysis for key input variables
+
+        Always respond with valid JSON matching the required schema. Use conservative estimates to ensure mission readiness."""
     
     def _build_forecasting_prompt(self, input_data: ForecastingInput) -> str:
         """Build the detailed forecasting prompt"""
