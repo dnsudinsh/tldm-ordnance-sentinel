@@ -192,21 +192,43 @@ export default function Forecasting() {
           scenarios: [
             {
               name: "Increased Exercise Tempo",
-              description: "20% increase in exercise frequency and intensity",
-              exercise_intensity_multiplier: 1.2,
-              additional_events: 2
+              description: "Enhanced training schedule with 50% more exercises and higher intensity operations",
+              exercise_intensity_multiplier: 1.5,
+              additional_events: 3,
+              operational_tempo_increase: 0.3,
+              scenario_duration_days: 90
             },
             {
               name: "Supply Chain Disruption",
-              description: "30-day delay in procurement timelines", 
-              lead_time_increase_days: 30,
-              supplier_reliability_factor: 0.7
+              description: "Major logistics disruption affecting procurement and delivery timelines", 
+              lead_time_increase_days: 45,
+              supplier_reliability_factor: 0.6,
+              logistics_disruption_probability: 0.4,
+              emergency_procurement_capability: false
             },
             {
               name: "Budget Constraints",
-              description: "20% reduction in procurement budget",
+              description: "Significant budget reduction requiring careful resource optimization",
               procurement_delay_days: 60,
-              quantity_reduction_factor: 0.8
+              quantity_reduction_factor: 0.7,
+              budget_constraint_percentage: 70.0,
+              stockout_cost_factor: 1.5
+            },
+            {
+              name: "Geopolitical Tension",
+              description: "Elevated security posture requiring increased readiness and consumption",
+              geopolitical_tension_level: "high",
+              operational_tempo_increase: 0.5,
+              demand_volatility_multiplier: 1.8,
+              exercise_intensity_multiplier: 1.3
+            },
+            {
+              name: "Monsoon Impact",
+              description: "Seasonal weather effects limiting operations and supply deliveries",
+              weather_impact_factor: 0.7,
+              logistics_disruption_probability: 0.25,
+              maintenance_schedule_impact: 0.15,
+              lead_time_increase_days: 20
             }
           ]
         }),
@@ -215,9 +237,22 @@ export default function Forecasting() {
       if (response.ok) {
         const scenarioResults = await response.json();
         setScenarios(scenarioResults);
+        
+        toast({
+          title: "Scenario Analysis Complete",
+          description: `Generated ${scenarioResults.length} scenario projections.`,
+        });
+      } else {
+        throw new Error('Scenario generation failed');
       }
     } catch (error) {
       console.error('Failed to generate scenarios:', error);
+      
+      toast({
+        title: "Scenario Analysis Failed",
+        description: "Unable to generate scenario analysis. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
