@@ -104,8 +104,12 @@ export function AppSidebar() {
     >
       <SidebarHeader className="border-b border-border/50 p-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-            <Shield className="h-6 w-6 text-primary animate-pulse-tactical" />
+          <div className="flex h-10 w-10 items-center justify-center">
+            <img 
+              src="/tldm_logo.png" 
+              alt="TLDM Logo" 
+              className="h-10 w-10 rounded-full object-contain"
+            />
           </div>
           {!collapsed && (
             <div className="flex flex-col">
