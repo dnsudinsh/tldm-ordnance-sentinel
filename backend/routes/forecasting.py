@@ -164,7 +164,7 @@ async def analyze_scenarios(
     request: ScenarioAnalysisRequest,
     db: AsyncIOMotorDatabase = Depends(get_database)
 ):
-    """Analyze what-if scenarios for a forecast"""
+    """Analyze what-if scenarios for a forecast with fallback to mock data"""
     
     try:
         # Get base forecast
@@ -173,41 +173,87 @@ async def analyze_scenarios(
             raise HTTPException(status_code=404, detail="Base forecast not found")
         
         base_forecast = ForecastResult(**base_forecast_doc["result"])
-        base_input = ForecastingInput(**base_forecast_doc["input_parameters"])
         
-        scenario_results = []
-        
-        for scenario in request.scenarios:
-            # Modify input parameters based on scenario
-            modified_input = _apply_scenario_parameters(base_input, scenario)
+        try:
+            # Try to use real scenario analysis if base input is available
+            if "input_parameters" in base_forecast_doc and base_forecast_doc["input_parameters"]:
+                base_input = ForecastingInput(**base_forecast_doc["input_parameters"])
+                
+                scenario_results = []
+                
+                # Generate scenarios with timeout
+                import asyncio
+                for scenario in request.scenarios:
+                    try:
+                        # Modify input parameters based on scenario
+                        modified_input = _apply_scenario_parameters(base_input, scenario)
+                        
+                        # Generate new forecast with modified parameters (with timeout)
+                        scenario_forecast = await asyncio.wait_for(
+                            forecaster.generate_forecast(modified_input),
+                            timeout=8.0
+                        )
+                        
+                        # Create scenario result
+                        scenario_result = ScenarioResult(
+                            scenario_name=scenario.name,
+                            description=scenario.description,
+                            base_readiness=base_forecast.timeframe.current_readiness,
+                            scenario_readiness=scenario_forecast.timeframe.projections[-1].readiness if scenario_forecast.timeframe.projections else base_forecast.timeframe.current_readiness,
+                            readiness_impact=scenario_forecast.timeframe.projections[-1].readiness - base_forecast.timeframe.projections[-1].readiness if scenario_forecast.timeframe.projections and base_forecast.timeframe.projections else 0,
+                            risk_assessment={
+                                "critical_alerts": len(scenario_forecast.critical_alerts),
+                                "high_priority_recommendations": len([r for r in scenario_forecast.procurement_recommendations if r.priority in ["urgent", "high"]])
+                            },
+                            recommendations=scenario_forecast.mitigation_strategies,
+                            timeline_comparison=scenario_forecast.timeframe.projections,
+                            metadata={
+                                "scenario_parameters": scenario.dict(),
+                                "generated_at": datetime.utcnow().isoformat(),
+                                "method": "ai_analysis"
+                            }
+                        )
+                        scenario_results.append(scenario_result)
+                        
+                    except (asyncio.TimeoutError, Exception) as e:
+                        logger.warning(f"Scenario {scenario.name} analysis failed: {e}")
+                        continue
+                
+                if scenario_results:
+                    return scenario_results
             
-            # Generate new forecast with modified parameters
-            scenario_forecast = await forecaster.generate_forecast(modified_input)
+            # Fallback to mock scenarios if AI fails or no input data
+            logger.info("Using mock scenario analysis for demonstration")
+            mock_scenarios = mock_service.generate_mock_scenarios(base_forecast)
             
-            # Create scenario result
-            scenario_result = ScenarioResult(
-                scenario_name=scenario.name,
-                description=scenario.description,
-                base_readiness=base_forecast.timeframe.current_readiness,
-                scenario_readiness=scenario_forecast.timeframe.projections[-1].readiness if scenario_forecast.timeframe.projections else base_forecast.timeframe.current_readiness,
-                readiness_impact=scenario_forecast.timeframe.projections[-1].readiness - base_forecast.timeframe.projections[-1].readiness if scenario_forecast.timeframe.projections and base_forecast.timeframe.projections else 0,
-                risk_assessment={
-                    "critical_alerts": len(scenario_forecast.critical_alerts),
-                    "high_priority_recommendations": len([r for r in scenario_forecast.procurement_recommendations if r.priority in ["urgent", "high"]])
-                },
-                recommendations=scenario_forecast.mitigation_strategies,
-                timeline_comparison=scenario_forecast.timeframe.projections,
-                metadata={
-                    "scenario_parameters": scenario.dict(),
-                    "generated_at": datetime.utcnow().isoformat()
-                }
-            )
-            scenario_results.append(scenario_result)
+            # Add demo metadata
+            for scenario in mock_scenarios:
+                scenario.metadata.update({
+                    'demo_mode': True,
+                    'note': 'Demonstration scenario analysis. AI analysis will be used when service is available.'
+                })
+            
+            return mock_scenarios
+            
+        except Exception as e:
+            logger.warning(f"Scenario analysis failed, using mock data: {e}")
+            
+            # Use mock scenarios as complete fallback
+            mock_scenarios = mock_service.generate_mock_scenarios(base_forecast)
+            
+            for scenario in mock_scenarios:
+                scenario.metadata.update({
+                    'fallback_mode': True,
+                    'fallback_reason': str(e),
+                    'note': 'Mock scenario analysis due to service unavailability.'
+                })
+            
+            return mock_scenarios
         
-        return scenario_results
-        
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Scenario analysis failed: {e}")
+        logger.error(f"Scenario analysis completely failed: {e}")
         raise HTTPException(status_code=500, detail=f"Scenario analysis failed: {str(e)}")
 
 
