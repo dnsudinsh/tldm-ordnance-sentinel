@@ -359,7 +359,7 @@ export default function SmartOrdnanceTracking() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="location">Scan Location</Label>
                   <Select value={selectedLocation} onValueChange={setSelectedLocation}>
@@ -388,21 +388,23 @@ export default function SmartOrdnanceTracking() {
                   </Select>
                 </div>
 
-                <div className="flex items-end gap-2">
+                <div className="flex items-end gap-2 sm:col-span-1 lg:col-span-1">
                   <Button 
                     onClick={simulateRFIDScan} 
                     disabled={isScanning || !selectedLocation || !scannerOperator}
-                    className="flex-1"
+                    className="flex-1 w-full"
                   >
                     {isScanning ? (
                       <>
                         <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        Scanning...
+                        <span className="hidden sm:inline">Scanning...</span>
+                        <span className="sm:hidden">Scan...</span>
                       </>
                     ) : (
                       <>
                         <Radar className="h-4 w-4 mr-2" />
-                        Start Scan
+                        <span className="hidden sm:inline">Start Scan</span>
+                        <span className="sm:hidden">Scan</span>
                       </>
                     )}
                   </Button>
