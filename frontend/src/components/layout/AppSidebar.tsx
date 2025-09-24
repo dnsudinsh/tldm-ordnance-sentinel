@@ -117,7 +117,7 @@ export function AppSidebar() {
                 BITS
               </h1>
               <p className="text-xs text-muted-foreground font-medium">
-                TLDM Command System
+                Bullet Inventory Tracking System
               </p>
             </div>
           )}
