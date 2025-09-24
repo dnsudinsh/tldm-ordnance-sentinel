@@ -57,6 +57,12 @@ const navigationItems = [
     description: "Predictive Analytics"
   },
   { 
+    title: "Smart Ordnance Tracking", 
+    url: "/smart-tracking", 
+    icon: Anchor,
+    description: "RFID Asset Management"
+  },
+  { 
     title: "Transfer Items", 
     url: "/transfer", 
     icon: ArrowRightLeft,
