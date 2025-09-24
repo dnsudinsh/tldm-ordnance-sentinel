@@ -131,7 +131,7 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-4 py-6">
+      <SidebarContent className="px-2 sm:px-4 py-6">
         <SidebarGroup>
           <SidebarGroupLabel className="mb-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             {!collapsed ? "Mission Control" : ""}
