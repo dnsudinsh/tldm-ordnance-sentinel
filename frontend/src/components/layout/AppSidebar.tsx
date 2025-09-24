@@ -7,7 +7,8 @@ import {
   FileText,
   Brain,
   Shield,
-  Anchor
+  Anchor,
+  TrendingUp
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
