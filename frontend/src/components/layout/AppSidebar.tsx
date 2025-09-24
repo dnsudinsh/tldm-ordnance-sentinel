@@ -109,18 +109,18 @@ export function AppSidebar() {
       className="transition-all duration-300 border-r border-border/50 bg-gradient-to-b from-sidebar to-sidebar/95"
       collapsible="icon"
     >
-      <SidebarHeader className="border-b border-border/50 p-6">
+      <SidebarHeader className="border-b border-border/50 p-3 sm:p-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center">
+          <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center">
             <img 
               src="/tldm_logo.png" 
               alt="TLDM Logo" 
-              className="h-10 w-10 rounded-full object-contain"
+              className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-contain"
             />
           </div>
           {!collapsed && (
             <div className="flex flex-col">
-              <h1 className="font-display text-lg font-bold text-foreground">
+              <h1 className="font-display text-base sm:text-lg font-bold text-foreground">
                 BITS
               </h1>
               <p className="text-xs text-muted-foreground font-medium">
