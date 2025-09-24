@@ -25,6 +25,7 @@ router = APIRouter(prefix="/api/forecasts", tags=["forecasting"])
 # Global forecaster instance
 forecaster = ReadinessForecaster()
 analyzer = TimeSeriesAnalyzer()
+export_service = ForecastExportService()
 
 
 async def get_database() -> AsyncIOMotorDatabase:
