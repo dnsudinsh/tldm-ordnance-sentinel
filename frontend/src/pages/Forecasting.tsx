@@ -151,20 +151,25 @@ export default function Forecasting() {
         const result = await response.json();
         setForecast(result);
         
+        const isAIGenerated = result.metadata?.generated_as === 'ai_service';
+        
         toast({
           title: "Forecast Generated Successfully",
-          description: `AI analysis complete with ${result.confidence_metrics.model_accuracy * 100}% confidence.`,
+          description: `${isAIGenerated ? 'AI-powered' : 'Rule-based'} analysis complete with ${(result.confidence_metrics.model_accuracy * 100).toFixed(0)}% confidence.`,
         });
         
         // Reload history
         loadForecastHistory();
       } else {
-        throw new Error('Failed to generate forecast');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Generation failed');
       }
     } catch (error) {
+      console.error('Forecast generation error:', error);
+      
       toast({
         title: "Forecast Generation Failed", 
-        description: "Unable to generate forecast. Please try again.",
+        description: error instanceof Error ? error.message : "Unable to generate forecast. Please try again.",
         variant: "destructive",
       });
     } finally {
