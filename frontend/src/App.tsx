@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Inventory from "./pages/Inventory";
 import AddInventory from "./pages/AddInventory";
 import AIRecommendations from "./pages/AIRecommendations";
+import Forecasting from "./pages/Forecasting";
 import Transfer from "./pages/Transfer";
 import Barcode from "./pages/Barcode";
 import Reports from "./pages/Reports";
