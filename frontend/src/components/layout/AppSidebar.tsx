@@ -157,7 +157,7 @@ export function AppSidebar() {
                         </div>
                       )}
                       {isActive(item.url) && (
-                        <div className="absolute right-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-l-full bg-primary" />
+                        <ChevronRight className="h-3 w-3 text-primary ml-auto flex-shrink-0" />
                       )}
                     </NavLink>
                   </SidebarMenuButton>
