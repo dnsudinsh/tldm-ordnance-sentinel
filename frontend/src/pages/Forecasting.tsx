@@ -27,10 +27,12 @@ import {
   BarChart3,
   Download,
   Settings,
-  PlayCircle
+  PlayCircle,
+  Info
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { FrontendMockDataService, MockForecastResult, MockScenarioResult } from '../services/mockForecastingData';
 
 interface ForecastResult {
   forecast_id: string;
