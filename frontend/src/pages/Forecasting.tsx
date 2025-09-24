@@ -425,29 +425,30 @@ export default function Forecasting() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <h1 className="font-display text-3xl font-bold text-foreground flex items-center gap-3">
-            <TrendingUp className="h-8 w-8 text-primary" />
-            Predictive Readiness Forecasting
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground flex items-center gap-2 sm:gap-3">
+            <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-primary animate-pulse" />
+            <span>Predictive Readiness Forecasting</span>
           </h1>
           
           {forecast?.metadata?.demo_mode && (
-            <Badge variant="outline" className="flex items-center gap-1 text-info border-info/30 bg-info/10">
+            <Badge variant="outline" className="flex items-center gap-1 text-info border-info/30 bg-info/10 text-xs sm:text-sm">
               <Info className="h-3 w-3" />
-              Demo Mode
+              <span className="hidden sm:inline">Demo Mode</span>
+              <span className="sm:hidden">Demo</span>
             </Badge>
           )}
         </div>
-        <p className="text-muted-foreground">
+        <p className="text-sm sm:text-base text-muted-foreground">
           AI-powered readiness projections and strategic planning insights
         </p>
         
         {forecast?.metadata?.demo_mode && (
           <div className="bg-info/10 border border-info/20 rounded-lg p-3 mt-2">
-            <p className="text-sm text-info-foreground">
+            <p className="text-xs sm:text-sm text-info-foreground">
               <strong>Demonstration Mode:</strong> This system is showing realistic sample data to demonstrate 
               forecasting capabilities. Live AI analysis will be available when service connectivity is restored.
             </p>
