@@ -254,20 +254,20 @@ export default function AddInventory() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-bold text-foreground flex items-center gap-3">
-          <Plus className="h-8 w-8 text-primary" />
-          Add Inventory Item
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground flex items-center gap-2 sm:gap-3">
+          <Plus className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+          <span>Add Inventory Item</span>
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-sm sm:text-base text-muted-foreground">
           Register new ordnance items into the TLDM inventory system
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Item Information */}
           <Card className="glass">
             <CardHeader>
