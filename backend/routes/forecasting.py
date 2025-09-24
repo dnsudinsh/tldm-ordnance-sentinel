@@ -18,6 +18,7 @@ from models.forecasting import (
 )
 from services.forecasting_engine import ReadinessForecaster, TimeSeriesAnalyzer
 from services.export_service import ForecastExportService
+from services.mock_forecasting_service import MockForecastingService
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/forecasts", tags=["forecasting"])
