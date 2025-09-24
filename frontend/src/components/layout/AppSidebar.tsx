@@ -169,14 +169,14 @@ export function AppSidebar() {
 
         {/* Naval Status Indicator */}
         {!collapsed && (
-          <div className="mt-8 rounded-lg bg-card/50 border border-border/50 p-4">
+          <div className="mt-8 rounded-lg bg-card/50 border border-border/50 p-3 sm:p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Anchor className="h-4 w-4 text-primary" />
+              <Anchor className="h-4 w-4 text-primary flex-shrink-0" />
               <span className="text-sm font-medium">Fleet Status</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-              <span className="text-xs text-muted-foreground">All Systems Operational</span>
+              <div className="h-2 w-2 rounded-full bg-success animate-pulse flex-shrink-0" />
+              <span className="text-xs text-muted-foreground truncate">All Systems Operational</span>
             </div>
           </div>
         )}
