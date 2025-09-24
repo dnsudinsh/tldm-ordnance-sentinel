@@ -174,29 +174,29 @@ export default function Dashboard() {
       {/* Readiness Breakdown */}
       <Card className="glass">
         <CardHeader>
-          <CardTitle className="font-display">Ordnance Readiness Analysis</CardTitle>
-          <CardDescription>
+          <CardTitle className="font-display text-lg sm:text-xl">Ordnance Readiness Analysis</CardTitle>
+          <CardDescription className="text-sm">
             Weighted readiness calculation based on strategic importance
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {categoryStats.map((category) => (
               <div key={category.name} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg bg-card/50 border border-border/50`}>
-                      <category.icon className={`h-4 w-4 ${category.color}`} />
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className={`p-1.5 sm:p-2 rounded-lg bg-card/50 border border-border/50`}>
+                      <category.icon className={`h-3 w-3 sm:h-4 sm:w-4 ${category.color}`} />
                     </div>
                     <div>
-                      <p className="font-medium">{category.name}</p>
+                      <p className="font-medium text-sm sm:text-base">{category.name}</p>
                       <p className="text-xs text-muted-foreground">
                         Weight: {(category.weight * 100).toFixed(0)}%
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className={`font-bold ${getReadinessColor(category.percentage)}`}>
+                    <p className={`font-bold text-sm sm:text-base ${getReadinessColor(category.percentage)}`}>
                       {category.percentage.toFixed(1)}%
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -213,9 +213,9 @@ export default function Dashboard() {
           </div>
 
           {/* Formula Explanation */}
-          <div className="mt-8 p-4 rounded-lg bg-muted/30 border border-border/50">
-            <h4 className="font-medium mb-2 flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
+          <div className="mt-6 sm:mt-8 p-3 sm:p-4 rounded-lg bg-muted/30 border border-border/50">
+            <h4 className="font-medium mb-2 flex items-center gap-2 text-sm sm:text-base">
+              <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
               Readiness Formula
             </h4>
             <p className="text-sm text-muted-foreground mb-2">
