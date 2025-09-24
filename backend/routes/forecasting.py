@@ -1,19 +1,23 @@
 """
 Forecasting API Routes for TLDM BITS
 """
-from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks, Response
+from fastapi.responses import StreamingResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 import logging
+from io import BytesIO
 
 from models.forecasting import (
     ForecastingInput, ForecastResult, GenerateForecastRequest,
     ScenarioAnalysisRequest, ScenarioResult, UpdateForecastAccuracyRequest,
     ForecastHistory, AlertHistory, UsageData, ExerciseEvent, 
-    SupplyChainData, HistoricalData, InventorySnapshot, ForecastingConfig
+    SupplyChainData, HistoricalData, InventorySnapshot, ForecastingConfig,
+    AccuracyMetrics, ModelPerformance
 )
 from services.forecasting_engine import ReadinessForecaster, TimeSeriesAnalyzer
+from services.export_service import ForecastExportService
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/forecasts", tags=["forecasting"])
