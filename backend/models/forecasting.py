@@ -232,7 +232,35 @@ class ConsumptionProjection(BaseModel):
     risk_factors: List[str]
 
 
-# Database Models for storing results
+# Historical Accuracy Tracking Models
+class ForecastAccuracy(BaseModel):
+    forecast_id: str
+    prediction_date: datetime
+    actual_date: datetime
+    category: str
+    predicted_value: float
+    actual_value: float
+    error_percentage: float
+    accuracy_score: float  # 0-1 scale
+    
+class AccuracyMetrics(BaseModel):
+    overall_accuracy: float
+    category_accuracy: Dict[str, float]
+    time_horizon_accuracy: Dict[int, float]  # 30, 60, 90 days
+    recent_trend: str  # improving, declining, stable
+    confidence_calibration: float  # How well confidence intervals match actual outcomes
+    bias_analysis: Dict[str, float]  # over_prediction, under_prediction by category
+
+class ModelPerformance(BaseModel):
+    model_version: str
+    training_period: str
+    evaluation_period: str
+    accuracy_metrics: AccuracyMetrics
+    feature_importance: Dict[str, float]
+    drift_detection: bool
+    recommendation: str  # retrain, continue, investigate
+
+# Enhanced Database Models
 class ForecastHistory(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     forecast_id: str
@@ -242,6 +270,8 @@ class ForecastHistory(BaseModel):
     accuracy_score: Optional[float] = None
     actual_vs_predicted: Optional[Dict[str, Any]] = None
     created_by: str = "system"
+    model_version: str = "1.0"
+    accuracy_tracking: Optional[List[ForecastAccuracy]] = None
 
 
 class AlertHistory(BaseModel):
