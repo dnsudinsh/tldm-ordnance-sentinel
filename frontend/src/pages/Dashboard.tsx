@@ -95,19 +95,19 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-bold text-foreground">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
           Command Center
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-sm sm:text-base text-muted-foreground">
           Real-time ordnance readiness and fleet status overview
         </p>
       </div>
 
       {/* Overall Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         <Card className="glass hover-lift">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Overall Readiness</CardTitle>
