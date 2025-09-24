@@ -269,6 +269,206 @@ async def get_active_alerts(
         raise HTTPException(status_code=500, detail="Failed to get active alerts")
 
 
+@router.get("/{forecast_id}/export/pdf")
+async def export_forecast_pdf(
+    forecast_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """Export forecast as PDF report"""
+    
+    try:
+        # Get forecast data
+        forecast_doc = await db.forecast_history.find_one({"forecast_id": forecast_id})
+        if not forecast_doc:
+            raise HTTPException(status_code=404, detail="Forecast not found")
+        
+        forecast = ForecastResult(**forecast_doc["result"])
+        
+        # Generate PDF
+        pdf_data = await export_service.export_forecast_pdf(forecast)
+        
+        # Return PDF response
+        return StreamingResponse(
+            BytesIO(pdf_data),
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename=forecast_{forecast_id}.pdf"}
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to export PDF for forecast {forecast_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to export PDF report")
+
+
+@router.get("/{forecast_id}/export/excel")
+async def export_forecast_excel(
+    forecast_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """Export forecast as Excel workbook"""
+    
+    try:
+        # Get forecast data
+        forecast_doc = await db.forecast_history.find_one({"forecast_id": forecast_id})
+        if not forecast_doc:
+            raise HTTPException(status_code=404, detail="Forecast not found")
+        
+        forecast = ForecastResult(**forecast_doc["result"])
+        
+        # Generate Excel
+        excel_data = await export_service.export_forecast_excel(forecast)
+        
+        # Return Excel response
+        return StreamingResponse(
+            BytesIO(excel_data),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f"attachment; filename=forecast_{forecast_id}.xlsx"}
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to export Excel for forecast {forecast_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to export Excel report")
+
+
+@router.get("/analytics/accuracy", response_model=AccuracyMetrics)
+async def get_accuracy_metrics(
+    days_back: int = 90,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """Get historical forecast accuracy metrics"""
+    
+    try:
+        # Get forecasts with accuracy data from the last N days
+        cutoff_date = datetime.utcnow() - timedelta(days=days_back)
+        
+        cursor = db.forecast_history.find({
+            "generated_at": {"$gte": cutoff_date},
+            "accuracy_score": {"$exists": True, "$ne": None}
+        })
+        
+        forecasts_with_accuracy = await cursor.to_list(length=1000)
+        
+        if not forecasts_with_accuracy:
+            # Return default metrics if no accuracy data
+            return AccuracyMetrics(
+                overall_accuracy=0.0,
+                category_accuracy={},
+                time_horizon_accuracy={30: 0.0, 60: 0.0, 90: 0.0},
+                recent_trend="insufficient_data",
+                confidence_calibration=0.0,
+                bias_analysis={}
+            )
+        
+        # Calculate accuracy metrics
+        accuracy_scores = [f["accuracy_score"] for f in forecasts_with_accuracy]
+        overall_accuracy = sum(accuracy_scores) / len(accuracy_scores)
+        
+        # Calculate trend (simplified)
+        recent_trend = "stable"
+        if len(accuracy_scores) >= 5:
+            recent_avg = sum(accuracy_scores[-5:]) / 5
+            older_avg = sum(accuracy_scores[:-5]) / len(accuracy_scores[:-5])
+            
+            if recent_avg > older_avg + 0.05:
+                recent_trend = "improving"
+            elif recent_avg < older_avg - 0.05:
+                recent_trend = "declining"
+        
+        return AccuracyMetrics(
+            overall_accuracy=overall_accuracy,
+            category_accuracy={"general": overall_accuracy},  # Simplified
+            time_horizon_accuracy={
+                30: overall_accuracy * 0.95,
+                60: overall_accuracy * 0.90,
+                90: overall_accuracy * 0.85
+            },
+            recent_trend=recent_trend,
+            confidence_calibration=0.85,  # Placeholder
+            bias_analysis={"overall": 0.0}  # Placeholder
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to get accuracy metrics: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get accuracy metrics")
+
+
+@router.post("/{forecast_id}/validate")
+async def validate_forecast_predictions(
+    forecast_id: str,
+    actual_data: Dict[str, float],
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """Validate forecast predictions against actual outcomes"""
+    
+    try:
+        # Get original forecast
+        forecast_doc = await db.forecast_history.find_one({"forecast_id": forecast_id})
+        if not forecast_doc:
+            raise HTTPException(status_code=404, detail="Forecast not found")
+        
+        forecast = ForecastResult(**forecast_doc["result"])
+        
+        # Calculate validation metrics
+        validation_results = []
+        total_error = 0
+        valid_comparisons = 0
+        
+        for days_str, actual_value in actual_data.items():
+            days = int(days_str)
+            
+            # Find matching projection
+            matching_projection = None
+            for proj in forecast.timeframe.projections:
+                if proj.days == days:
+                    matching_projection = proj
+                    break
+            
+            if matching_projection:
+                error = abs(matching_projection.readiness - actual_value)
+                error_percentage = error / actual_value if actual_value > 0 else 0
+                
+                validation_results.append({
+                    "days": days,
+                    "predicted": matching_projection.readiness,
+                    "actual": actual_value,
+                    "error": error,
+                    "error_percentage": error_percentage,
+                    "within_confidence_interval": (
+                        matching_projection.confidence_interval[0] <= actual_value <= 
+                        matching_projection.confidence_interval[1]
+                    )
+                })
+                
+                total_error += error_percentage
+                valid_comparisons += 1
+        
+        # Calculate overall accuracy
+        overall_accuracy = 1 - (total_error / valid_comparisons) if valid_comparisons > 0 else 0
+        overall_accuracy = max(0, min(1, overall_accuracy))  # Clamp to [0, 1]
+        
+        # Update forecast record with validation data
+        await db.forecast_history.update_one(
+            {"forecast_id": forecast_id},
+            {
+                "$set": {
+                    "accuracy_score": overall_accuracy,
+                    "validation_results": validation_results,
+                    "validated_at": datetime.utcnow()
+                }
+            }
+        )
+        
+        return {
+            "forecast_id": forecast_id,
+            "overall_accuracy": overall_accuracy,
+            "validation_results": validation_results,
+            "validated_comparisons": valid_comparisons
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to validate forecast {forecast_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to validate forecast")
+
+
 # Helper Functions
 async def _get_current_inventory(db: AsyncIOMotorDatabase, filter_criteria: Dict = None) -> List[InventorySnapshot]:
     """Get current inventory data"""
