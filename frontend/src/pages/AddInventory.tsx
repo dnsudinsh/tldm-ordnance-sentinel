@@ -303,7 +303,14 @@ export default function AddInventory() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="typeSubType">Type/Sub-Type *</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="typeSubType">Type/Sub-Type *</Label>
+                  {formData.ordnanceCategory && getAvailableTypes().length > 0 && (
+                    <span className="text-xs text-muted-foreground">
+                      {getAvailableTypes().length} options available
+                    </span>
+                  )}
+                </div>
                 <Select 
                   value={formData.typeSubType} 
                   onValueChange={(value) => handleInputChange('typeSubType', value)}
