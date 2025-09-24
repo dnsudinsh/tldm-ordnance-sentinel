@@ -116,7 +116,7 @@ export default function Forecasting() {
 
   const loadForecastHistory = async () => {
     try {
-      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL || process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:8001';
       const response = await fetch(`${backendUrl}/api/forecasts?limit=10`);
       if (response.ok) {
         const history = await response.json();
