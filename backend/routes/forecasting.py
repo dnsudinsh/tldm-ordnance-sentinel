@@ -27,6 +27,7 @@ router = APIRouter(prefix="/api/forecasts", tags=["forecasting"])
 forecaster = ReadinessForecaster()
 analyzer = TimeSeriesAnalyzer()
 export_service = ForecastExportService()
+mock_service = MockForecastingService()
 
 
 async def get_database() -> AsyncIOMotorDatabase:
