@@ -57,7 +57,7 @@ export function Header() {
                 Tentera Laut Diraja Malaysia
               </h1>
               <p className="text-xs text-muted-foreground">
-                Royal Malaysian Navy - Defense Command
+                Royal Malaysian Navy - BITS (Bullet Inventory Tracking System)
               </p>
             </div>
           </div>
