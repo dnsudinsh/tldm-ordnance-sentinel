@@ -8,7 +8,8 @@ import {
   Brain,
   Shield,
   Anchor,
-  TrendingUp
+  TrendingUp,
+  ChevronRight
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
