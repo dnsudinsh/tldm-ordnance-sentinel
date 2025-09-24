@@ -534,14 +534,14 @@ export default function Forecasting() {
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             {/* Forecast Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
               <Card className="glass hover-lift">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Current Readiness</CardTitle>
                   <Gauge className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className={`text-2xl font-bold font-display ${getReadinessColor(forecast.timeframe.current_readiness)}`}>
+                  <div className={`text-xl sm:text-2xl font-bold font-display ${getReadinessColor(forecast.timeframe.current_readiness)}`}>
                     {forecast.timeframe.current_readiness.toFixed(1)}%
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
@@ -556,7 +556,7 @@ export default function Forecasting() {
                   <Target className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className={`text-2xl font-bold font-display ${getReadinessColor(forecast.timeframe.projections[2]?.readiness || 0)}`}>
+                  <div className={`text-xl sm:text-2xl font-bold font-display ${getReadinessColor(forecast.timeframe.projections[2]?.readiness || 0)}`}>
                     {(forecast.timeframe.projections[2]?.readiness || 0).toFixed(1)}%
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
@@ -571,7 +571,7 @@ export default function Forecasting() {
                   <AlertTriangle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold font-display text-destructive">
+                  <div className="text-xl sm:text-2xl font-bold font-display text-destructive">
                     {forecast.critical_alerts.length}
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
@@ -586,7 +586,7 @@ export default function Forecasting() {
                   <Brain className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold font-display text-primary">
+                  <div className="text-xl sm:text-2xl font-bold font-display text-primary">
                     {(forecast.confidence_metrics.model_accuracy * 100).toFixed(0)}%
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
