@@ -428,13 +428,31 @@ export default function Forecasting() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-bold text-foreground flex items-center gap-3">
-          <TrendingUp className="h-8 w-8 text-primary" />
-          Predictive Readiness Forecasting
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="font-display text-3xl font-bold text-foreground flex items-center gap-3">
+            <TrendingUp className="h-8 w-8 text-primary" />
+            Predictive Readiness Forecasting
+          </h1>
+          
+          {forecast?.metadata?.demo_mode && (
+            <Badge variant="outline" className="flex items-center gap-1 text-info border-info/30 bg-info/10">
+              <Info className="h-3 w-3" />
+              Demo Mode
+            </Badge>
+          )}
+        </div>
         <p className="text-muted-foreground">
           AI-powered readiness projections and strategic planning insights
         </p>
+        
+        {forecast?.metadata?.demo_mode && (
+          <div className="bg-info/10 border border-info/20 rounded-lg p-3 mt-2">
+            <p className="text-sm text-info-foreground">
+              <strong>Demonstration Mode:</strong> This system is showing realistic sample data to demonstrate 
+              forecasting capabilities. Live AI analysis will be available when service connectivity is restored.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Control Panel */}
