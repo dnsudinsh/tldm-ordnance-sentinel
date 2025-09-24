@@ -406,9 +406,14 @@ export default function Forecasting() {
                   Run Scenarios
                 </Button>
                 
-                <Button variant="outline" onClick={exportForecast}>
+                <Button variant="outline" onClick={exportForecastPDF}>
                   <Download className="h-4 w-4 mr-2" />
-                  Export
+                  Export PDF
+                </Button>
+                
+                <Button variant="outline" onClick={exportForecastExcel}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Excel
                 </Button>
               </>
             )}
