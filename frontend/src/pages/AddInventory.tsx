@@ -34,6 +34,52 @@ import {
   InventoryItem 
 } from "../types/inventory";
 
+// Dynamic Type/Sub-Type mapping based on Ordnance Category
+const TYPE_SUBTYPE_MAPPING = {
+  "Ammunition": [
+    "RDS 5.56MM BALL M855",
+    "RDS 7.62MM BALL",
+    "RDS 40MM/L70 CAL HE-T",
+    "RDS 12.7MM Ball"
+  ],
+  "Missile": [
+    "Exocet MM40",
+    "Exocet SM39", 
+    "Sea Skua",
+    "Aspide Sea Sparrow"
+  ],
+  "Torpedo": [
+    "A244S",
+    "DM2A4",
+    "Black Shark",
+    "MK46 Lightweight"
+  ],
+  "Seamine": [
+    "Latham L1",
+    "Sea Mine K2",
+    "Ground Mine",
+    "Influence Mine Type A"
+  ],
+  "Pyrotechnic": [
+    "Flares",
+    "Signal Smoke",
+    "Parachute Illuminating",
+    "Distress Signal"
+  ],
+  "Demolition": [
+    "C4 Explosive",
+    "TNT Block",
+    "Detonator",
+    "Shaped Charge"
+  ],
+  "Naval Mine": [
+    "Moored Mine",
+    "Drifting Mine", 
+    "Limpet Mine",
+    "Contact Mine"
+  ]
+};
+
 export default function AddInventory() {
   const { addInventoryItem } = useInventory();
   const { toast } = useToast();
