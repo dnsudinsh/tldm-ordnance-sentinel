@@ -83,7 +83,7 @@ async def generate_forecast(
             import asyncio
             forecast_result = await asyncio.wait_for(
                 forecaster.generate_forecast(forecasting_input), 
-                timeout=10.0  # 10 second timeout
+                timeout=5.0  # Reduced to 5 second timeout for faster fallback
             )
             
             logger.info("AI forecast generated successfully")
