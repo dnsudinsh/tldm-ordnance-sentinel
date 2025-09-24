@@ -216,18 +216,72 @@ export default function Forecasting() {
     }
   };
 
-  const exportForecast = () => {
+  const exportForecastPDF = async () => {
     if (!forecast) return;
     
-    const dataStr = JSON.stringify(forecast, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    try {
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      const response = await fetch(`${backendUrl}/api/forecasts/${forecast.forecast_id}/export/pdf`);
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `forecast_${forecast.forecast_id}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        toast({
+          title: "PDF Export Successful",
+          description: "Forecast report downloaded successfully.",
+        });
+      } else {
+        throw new Error('Export failed');
+      }
+    } catch (error) {
+      toast({
+        title: "PDF Export Failed",
+        description: "Unable to export PDF report. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const exportForecastExcel = async () => {
+    if (!forecast) return;
     
-    const exportFileDefaultName = `forecast_${forecast.forecast_id}.json`;
-    
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
+    try {
+      const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      const response = await fetch(`${backendUrl}/api/forecasts/${forecast.forecast_id}/export/excel`);
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `forecast_${forecast.forecast_id}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        toast({
+          title: "Excel Export Successful", 
+          description: "Forecast data downloaded successfully.",
+        });
+      } else {
+        throw new Error('Export failed');
+      }
+    } catch (error) {
+      toast({
+        title: "Excel Export Failed",
+        description: "Unable to export Excel file. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const getReadinessColor = (percentage: number) => {
