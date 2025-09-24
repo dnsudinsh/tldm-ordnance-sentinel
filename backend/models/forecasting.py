@@ -173,13 +173,36 @@ class ForecastResult(BaseModel):
 class ScenarioParameters(BaseModel):
     name: str
     description: Optional[str] = None
+    
+    # Exercise and Operations Impact
     exercise_intensity_multiplier: float = 1.0
     additional_events: int = 0
+    operational_tempo_increase: float = 0.0  # 0-1 scale
+    
+    # Supply Chain Disruptions
     lead_time_increase_days: int = 0
     supplier_reliability_factor: float = 1.0
+    logistics_disruption_probability: float = 0.0
+    
+    # Budget and Procurement
     procurement_delay_days: int = 0
     quantity_reduction_factor: float = 1.0
     budget_constraint_percentage: float = 100.0
+    
+    # External Factors
+    weather_impact_factor: float = 1.0  # Monsoon/weather effects
+    geopolitical_tension_level: str = "normal"  # normal, elevated, high, critical
+    maintenance_schedule_impact: float = 0.0
+    
+    # Advanced Modeling
+    demand_volatility_multiplier: float = 1.0
+    stockout_cost_factor: float = 1.0
+    emergency_procurement_capability: bool = True
+    
+    # Scenario Duration and Scope
+    scenario_duration_days: int = 90
+    affected_categories: Optional[List[str]] = None
+    probability_weight: float = 1.0
 
 
 class ScenarioResult(BaseModel):
