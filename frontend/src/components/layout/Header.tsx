@@ -47,9 +47,11 @@ export function Header() {
           <SidebarTrigger className="h-9 w-9 bg-primary/10 hover:bg-primary/20 border border-primary/20" />
           
           <div className="hidden md:flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-gradient-tactical flex items-center justify-center">
-              <span className="text-xs font-bold text-white">TL</span>
-            </div>
+            <img 
+              src="/tldm_logo.png" 
+              alt="TLDM Logo" 
+              className="h-10 w-10 rounded-full object-contain"
+            />
             <div>
               <h1 className="font-display text-lg font-bold text-foreground">
                 Tentera Laut Diraja Malaysia
