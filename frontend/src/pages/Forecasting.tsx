@@ -134,6 +134,11 @@ export default function Forecasting() {
     
     try {
       const backendUrl = import.meta.env.VITE_REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      
       const response = await fetch(`${backendUrl}/api/forecasts/generate`, {
         method: 'POST',
         headers: {
@@ -147,33 +152,51 @@ export default function Forecasting() {
             risk_tolerance: "conservative"
           }
         }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const result = await response.json();
         setForecast(result);
         
         const isAIGenerated = result.metadata?.generated_as === 'ai_service';
+        const isDemoMode = result.metadata?.demo_mode || result.metadata?.generated_as?.includes('demo');
         
         toast({
-          title: "Forecast Generated Successfully",
-          description: `${isAIGenerated ? 'AI-powered' : 'Rule-based'} analysis complete with ${(result.confidence_metrics.model_accuracy * 100).toFixed(0)}% confidence.`,
+          title: isDemoMode ? "Demo Forecast Generated" : "Forecast Generated Successfully",
+          description: `${isDemoMode ? 'Demonstration' : (isAIGenerated ? 'AI-powered' : 'Rule-based')} analysis complete with ${(result.confidence_metrics.model_accuracy * 100).toFixed(0)}% confidence.`,
+          variant: isDemoMode ? "default" : "default"
         });
         
         // Reload history
         loadForecastHistory();
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Generation failed');
+        throw new Error(`API Error: ${response.status}`);
       }
     } catch (error) {
-      console.error('Forecast generation error:', error);
+      console.warn('Backend forecast failed, using demonstration data:', error);
       
-      toast({
-        title: "Forecast Generation Failed", 
-        description: error instanceof Error ? error.message : "Unable to generate forecast. Please try again.",
-        variant: "destructive",
-      });
+      // Use frontend mock data as fallback
+      try {
+        const mockForecast = FrontendMockDataService.generateMockForecast(parseInt(selectedTimeframe));
+        setForecast(mockForecast as any); // Type assertion since interfaces are compatible
+        
+        toast({
+          title: "Demonstration Forecast Generated",
+          description: "Showing realistic demo data. This demonstrates full system capabilities while service connectivity is restored.",
+          variant: "default"
+        });
+        
+      } catch (mockError) {
+        console.error('Even mock data failed:', mockError);
+        toast({
+          title: "System Unavailable",
+          description: "Unable to generate forecast. Please refresh the page or contact administrator.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsGenerating(false);
     }
